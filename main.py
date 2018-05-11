@@ -17,39 +17,39 @@ import get_curvature
 import save_in_csv_and_xlsx
 
 
-# # Get Corrected_after Leaves Begin
-# # clear "split_after" directory
-# if os.path.isdir(r'./split_after'):
-#     if os.listdir(r'./split_after'):
-#         shutil.rmtree(r'./split_after')
-#         os.mkdir(r'./split_after')
+# Get Corrected_after Leaves Begin
+# clear "split_after" directory
+if os.path.isdir(r'./split_after'):
+    if os.listdir(r'./split_after'):
+        shutil.rmtree(r'./split_after')
+        os.mkdir(r'./split_after')
 
-# # clear "corrected_after" directory
-# if os.path.isdir(r'./corrected_after'):
-#     if os.listdir(r'./corrected_after'):
-#         shutil.rmtree(r'./corrected_after')
-#         os.mkdir(r'./corrected_after')
+# clear "corrected_after" directory
+if os.path.isdir(r'./corrected_after'):
+    if os.listdir(r'./corrected_after'):
+        shutil.rmtree(r'./corrected_after')
+        os.mkdir(r'./corrected_after')
 
-# # get images
-# leave_split_before = get_images.get_images(r'./split_before')[0]
-# leaves_split = split_leaves.split_leaves(leave_split_before)
-# save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
-# images = sprted(get_images.get_images(r'./split_after'))
+# get images
+leave_split_before = get_images.get_images(r'./split_before')[0]
+leaves_split = split_leaves.split_leaves(leave_split_before)
+save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
+images = sprted(get_images.get_images(r'./split_after'))
 
-# imgs_rotated = []
-# imgs_shape = []
+imgs_rotated = []
+imgs_shape = []
 
-# for image in images:
-#     print('Straightening {}'.format(image))
-#     img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
-#     cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
-#     imgs_rotated.append(img_rotated_cut)
-#     imgs_shape.append(img_rotated_cut.shape)
+for image in images:
+    print('Straightening {}'.format(image))
+    img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
+    cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
+    imgs_rotated.append(img_rotated_cut)
+    imgs_shape.append(img_rotated_cut.shape)
 
-# column = 5
-# img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
-# img_ori = cv2.imread(leave_split_before)
-# # Get Corrected_after Leaves Begin
+column = 5
+img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
+img_ori = cv2.imread(leave_split_before)
+# Get Corrected_after Leaves Begin
 
 images = sorted(get_images.get_images(r'./corrected_after/'))
 
