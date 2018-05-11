@@ -17,41 +17,41 @@ import get_curvature
 import save_in_csv_and_xlsx
 
 
-# Get Corrected_after Leaves Begin
-# clear "split_after" directory
-if os.path.isdir(r'./split_after'):
-    if os.listdir(r'./split_after'):
-        shutil.rmtree(r'./split_after')
-        os.mkdir(r'./split_after')
+# # Get Corrected_after Leaves Begin
+# # clear "split_after" directory
+# if os.path.isdir(r'./split_after'):
+#     if os.listdir(r'./split_after'):
+#         shutil.rmtree(r'./split_after')
+#         os.mkdir(r'./split_after')
 
-# clear "corrected_after" directory
-if os.path.isdir(r'./corrected_after'):
-    if os.listdir(r'./corrected_after'):
-        shutil.rmtree(r'./corrected_after')
-        os.mkdir(r'./corrected_after')
+# # clear "corrected_after" directory
+# if os.path.isdir(r'./corrected_after'):
+#     if os.listdir(r'./corrected_after'):
+#         shutil.rmtree(r'./corrected_after')
+#         os.mkdir(r'./corrected_after')
 
-# get images
-leave_split_before = get_images.get_images(r'./split_before')[0]
-leaves_split = split_leaves.split_leaves(leave_split_before)
-save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
-images = get_images.get_images(r'./split_after')
+# # get images
+# leave_split_before = get_images.get_images(r'./split_before')[0]
+# leaves_split = split_leaves.split_leaves(leave_split_before)
+# save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
+# images = sprted(get_images.get_images(r'./split_after'))
 
-imgs_rotated = []
-imgs_shape = []
+# imgs_rotated = []
+# imgs_shape = []
 
-for image in images:
-    print('Straightening {}'.format(image))
-    img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
-    cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
-    imgs_rotated.append(img_rotated_cut)
-    imgs_shape.append(img_rotated_cut.shape)
+# for image in images:
+#     print('Straightening {}'.format(image))
+#     img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
+#     cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
+#     imgs_rotated.append(img_rotated_cut)
+#     imgs_shape.append(img_rotated_cut.shape)
 
-column = 5
-img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
-img_ori = cv2.imread(leave_split_before)
-# Get Corrected_after Leaves Begin
+# column = 5
+# img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
+# img_ori = cv2.imread(leave_split_before)
+# # Get Corrected_after Leaves Begin
 
-images = get_images.get_images(r'./corrected_after/')
+images = sorted(get_images.get_images(r'./corrected_after/'))
 
 edges_canny = []
 edges_equalized = []
@@ -194,22 +194,27 @@ img_joined = show_images.show_images(imgs, imgs_shape, column, alignment='left')
 fig_1, axes_1 = plt.subplots(1, 1, figsize=(16, 8))
 axes_1.imshow(edge_canny_joined, plt.cm.gray)
 axes_1.set_title('Cannied Edges')
+# axes_1.set_axis_off()
 
 fig_2, axes_2 = plt.subplots(1, 1, figsize=(16, 8))
 axes_2.imshow(vein_joined, plt.cm.gray)
 axes_2.set_title('Veins')
+# axes_2.set_axis_off()
 
 fig_3, axes_3 = plt.subplots(1, 1, figsize=(16, 8))
 axes_3.imshow(main_vein_joined, plt.cm.gray)
 axes_3.set_title('Main Veins')
+# axes_3.set_axis_off()
 
 fig_4, axes_4 = plt.subplots(1, 1, figsize=(16, 8))
 axes_4.imshow(cv2.cvtColor(vein_bgr_joined, cv2.COLOR_BGR2RGB))
 axes_4.set_title('Colored Veins')
+# axes_4.set_axis_off()
 
 fig_5, axes_5 = plt.subplots(1, 1, figsize=(16, 8))
 axes_5.imshow(cv2.cvtColor(img_joined, cv2.COLOR_BGR2RGB))
 axes_5.set_title('Leaves with tops and bottoms')
+# axes_5.set_axis_off()
 
 frame = plt.gca()
 frame.axes.get_yaxis().set_visible(False)

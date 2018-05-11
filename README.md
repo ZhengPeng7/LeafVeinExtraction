@@ -36,10 +36,19 @@
 
 ### Result:
 
+![cannied_edges](./images/cannied_edges.png)
 
+![veins](./images/veins.png)
+
+![main_veins](./images/main_veins.png)
+
+![color_veins_with_angles](./images/color_veins_with_angles.png)
+
+![find_tops_bottoms](./images/find_tops_bottoms.png)
 
 ## TODO:
 
 ​	Use superpixel to adapt canny theshold locally.
 
 > If you've ever met any confusion or bug in related algorithms or code, please be not mean about your issue:)
+
