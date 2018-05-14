@@ -17,39 +17,39 @@ import get_curvature
 import save_in_csv_and_xlsx
 
 
-# Get Corrected_after Leaves Begin
-# clear "split_after" directory
-if os.path.isdir(r'./split_after'):
-    if os.listdir(r'./split_after'):
-        shutil.rmtree(r'./split_after')
-        os.mkdir(r'./split_after')
+# # Get Corrected_after Leaves Begin
+# # clear "split_after" directory
+# if os.path.isdir(r'./split_after'):
+#     if os.listdir(r'./split_after'):
+#         shutil.rmtree(r'./split_after')
+#         os.mkdir(r'./split_after')
 
-# clear "corrected_after" directory
-if os.path.isdir(r'./corrected_after'):
-    if os.listdir(r'./corrected_after'):
-        shutil.rmtree(r'./corrected_after')
-        os.mkdir(r'./corrected_after')
+# # clear "corrected_after" directory
+# if os.path.isdir(r'./corrected_after'):
+#     if os.listdir(r'./corrected_after'):
+#         shutil.rmtree(r'./corrected_after')
+#         os.mkdir(r'./corrected_after')
 
-# get images
-leave_split_before = get_images.get_images(r'./split_before')[0]
-leaves_split = split_leaves.split_leaves(leave_split_before)
-save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
-images = sprted(get_images.get_images(r'./split_after'))
+# # get images
+# leave_split_before = get_images.get_images(r'./split_before')[0]
+# leaves_split = split_leaves.split_leaves(leave_split_before)
+# save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
+# images = sprted(get_images.get_images(r'./split_after'))
 
-imgs_rotated = []
-imgs_shape = []
+# imgs_rotated = []
+# imgs_shape = []
 
-for image in images:
-    print('Straightening {}'.format(image))
-    img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
-    cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
-    imgs_rotated.append(img_rotated_cut)
-    imgs_shape.append(img_rotated_cut.shape)
+# for image in images:
+#     print('Straightening {}'.format(image))
+#     img_rotated_cut = cut_out_corrected_img.cut_out_corrected_img(image)
+#     cv2.imwrite(r'./corrected_after/'+image.rpartition('/')[-1].rpartition('.')[-3][-1]+'.jpg', img_rotated_cut)
+#     imgs_rotated.append(img_rotated_cut)
+#     imgs_shape.append(img_rotated_cut.shape)
 
-column = 5
-img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
-img_ori = cv2.imread(leave_split_before)
-# Get Corrected_after Leaves Begin
+# column = 5
+# img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
+# img_ori = cv2.imread(leave_split_before)
+# # Get Corrected_after Leaves Begin
 
 images = sorted(get_images.get_images(r'./corrected_after/'))
 
@@ -110,8 +110,19 @@ for i in range(len(edges_canny)):
             contours.pop(c)
     # Append curvatures
     curvatures.append([])
-    for c in contours:
-        curvatures[-1].append(np.mean(get_curvature.get_curvature(np.squeeze(c))))
+    for c in range(len(contours)):
+        if cv2.contourArea(contours[c]) < 60:
+            continue
+        canvas_t = np.zeros_like(vein)
+        cv2.drawContours(canvas_t, contours, c, 1, cv2.FILLED)
+        skn = morphology.skeletonize(canvas_t) * 255
+        skn_axis = np.where(skn == 255)
+        skn_axis = np.hstack(
+            (skn_axis[0].reshape(skn_axis[0].shape[0], -1),
+             skn_axis[1].reshape(skn_axis[1].shape[0], -1))
+        )
+
+        curvatures[-1].append(get_curvature.get_curvature(skn_axis[:, 1], skn_axis[:, 0]))
 
     for c in range(len(contours)):
         cv2.fillPoly(other_vein_bgr, [contours[c]], color_choice[c])
@@ -180,9 +191,16 @@ for i in range(len(edges_canny)):
     all_angles.append(angles)
 
 for i in range(len(images)):
-    image = [images[i] for j in range(len(curvatures[i]))]
-    save_in_csv_and_xlsx.save_in_csv_and_xlsx(image, curvatures[i], all_angles[i])
-save_in_csv_and_xlsx.csv2xlsx("curvatures_and_angles.csv")
+
+    csv_file = './curvatures_and_angles/curvatures_and_angles_' + str(i) + '.csv'
+    if os.path.exists(csv_file):
+        os.remove(csv_file)
+    for j in range(len(curvatures[i])):
+        curvatures[i][j] = curvatures[i][j].tolist()
+    save_in_csv_and_xlsx.save_in_csv(
+        csv_file, images[i], curvatures[i]
+    )    #, all_angles[i])
+    save_in_csv_and_xlsx.csv2xlsx(csv_file)
 
 column = 5
 vein_joined = show_images.show_images(veins, veins_shape, column, alignment='left')
@@ -192,17 +210,17 @@ img_joined = show_images.show_images(imgs, imgs_shape, column, alignment='left')
 
 # plt.shows
 fig_1, axes_1 = plt.subplots(1, 1, figsize=(16, 8))
-axes_1.imshow(edge_canny_joined, plt.cm.gray)
+axes_1.imshow(edge_canny_joined, cmap='gray')
 axes_1.set_title('Cannied Edges')
 # axes_1.set_axis_off()
 
 fig_2, axes_2 = plt.subplots(1, 1, figsize=(16, 8))
-axes_2.imshow(vein_joined, plt.cm.gray)
+axes_2.imshow(vein_joined, cmap='gray')
 axes_2.set_title('Veins')
 # axes_2.set_axis_off()
 
 fig_3, axes_3 = plt.subplots(1, 1, figsize=(16, 8))
-axes_3.imshow(main_vein_joined, plt.cm.gray)
+axes_3.imshow(main_vein_joined, cmap='gray')
 axes_3.set_title('Main Veins')
 # axes_3.set_axis_off()
 
