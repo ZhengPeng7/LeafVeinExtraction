@@ -1,6 +1,13 @@
 # LeafVeinExtraction
 >  To extract leaf veins from scanned leaf groups and save some valuable data, like curvatures.
 >
+>  Done:
+>
+>  1. Use K-means to get the **order** of each leaf in current group, then use Radon Transformation to **straighten** the leaf images.
+>  2. Use an improved dynamic Canny + Region Growth with two direction to **extract leaf vein** from the scanned leaf groups.
+>  3. Use DFT(Discrete Fourier Transformation) to evaluate the **curvatures** of the discrete vein points.
+>  4. Use curve-fitting to calculate the **angles** between the main-vein and sub-veins.
+>
 >  Author: Peng Zheng.
 
 >  Project duration: 6/2017~12/2017, while some data formatting jobs still need to be done.
