@@ -31,9 +31,9 @@ import save_in_csv_and_xlsx
 #         os.mkdir(r'./corrected_after')
 
 # # get images
-# leave_split_before = get_images.get_images(r'./split_before')[0]
-# leaves_split = split_leaves.split_leaves(leave_split_before)
-# save_split_leaves.save_split_leaves(leaves_split, leave_split_before, r'./split_after')
+# leaf_split_before = get_images.get_images(r'./split_before')[0]
+# leaves_split = split_leaves.split_leaves(leaf_split_before)
+# save_split_leaves.save_split_leaves(leaves_split, leaf_split_before, r'./split_after')
 # images = sprted(get_images.get_images(r'./split_after'))
 
 # imgs_rotated = []
@@ -48,7 +48,7 @@ import save_in_csv_and_xlsx
 
 # column = 5
 # img_joined = show_images.show_images(imgs_rotated, imgs_shape, column, alignment='left')
-# img_ori = cv2.imread(leave_split_before)
+# img_ori = cv2.imread(leaf_split_before)
 # # Get Corrected_after Leaves Begin
 
 images = sorted(get_images.get_images(r'./corrected_after/'))
@@ -190,17 +190,26 @@ for i in range(len(edges_canny)):
     veins_bgr_shape.append(vein_bgr.shape)
     all_angles.append(angles)
 
+# collect vein_data
+A4_name = get_images.get_images(r'./split_before')[0].split('/')[-1]
+csv_file_general = './vein_data/vein_general.csv'
+if os.path.exists(csv_file_general):
+    os.remove(csv_file_general)
+save_in_csv_and_xlsx.save_in_csv_general(
+    csv_file_general, A4_name, curvatures.copy(), all_angles
+)
+save_in_csv_and_xlsx.csv2xlsx(csv_file_general)
 for i in range(len(images)):
 
-    csv_file = './curvatures_and_angles/curvatures_and_angles_' + str(i) + '.csv'
-    if os.path.exists(csv_file):
-        os.remove(csv_file)
+    csv_file_curvature = './vein_data/vein_curvatures_' + str(i) + '.csv'
+    if os.path.exists(csv_file_curvature):
+        os.remove(csv_file_curvature)
     for j in range(len(curvatures[i])):
         curvatures[i][j] = curvatures[i][j].tolist()
-    save_in_csv_and_xlsx.save_in_csv(
-        csv_file, images[i], curvatures[i]
+    save_in_csv_and_xlsx.save_in_csv_curvature(
+        csv_file_curvature, A4_name, curvatures[i].copy()
     )    #, all_angles[i])
-    save_in_csv_and_xlsx.csv2xlsx(csv_file)
+    save_in_csv_and_xlsx.csv2xlsx(csv_file_curvature)
 
 column = 5
 vein_joined = show_images.show_images(veins, veins_shape, column, alignment='left')
