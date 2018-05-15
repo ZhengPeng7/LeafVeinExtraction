@@ -49,7 +49,7 @@
 
 ![main_veins](./images/main_veins.png)
 
-![color_veins_with_angles](./images/color_veins_with_angles.png)
+![color_veins_with_angles](./images/color_veins_with_angles.jpg)
 
 ![find_tops_bottoms](./images/find_tops_bottoms.png)
 

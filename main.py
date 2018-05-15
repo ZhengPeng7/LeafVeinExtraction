@@ -159,8 +159,8 @@ for i in range(len(edges_canny)):
     # print("text_places:", text_places)
     main_vein_bgr = cv2.cvtColor(main_vein, cv2.COLOR_GRAY2BGR)
     vein_bgr = cv2.add(main_vein_bgr, other_vein_bgr)
-    for j in range(len(pts)):
-        cv2.putText(vein_bgr, str(angles[j])[:str(angles[j]).find('.') + 3],
+    for j in range(1, len(pts)):
+        cv2.putText(vein_bgr, str(j)+', '+str(angles[j])[:str(angles[j]).find('.')+2],
                     (min(vein_bgr.shape[0]-100, max(50, text_places[j][1]-30)),
                      min(vein_bgr.shape[1]-50, max(30, text_places[j][0]))),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.3, (111, 222, 111), thickness=2)
@@ -192,7 +192,11 @@ for i in range(len(edges_canny)):
 
 # collect vein_data
 A4_name = get_images.get_images(r'./split_before')[0].split('/')[-1]
-csv_file_general = './vein_data/vein_general.csv'
+vein_data = 'vein_data'
+if os.path.exists(vein_data):
+    shutil.rmtree(vein_data)
+os.mkdir(vein_data)
+csv_file_general = os.path.join(vein_data, 'vein_general.csv')
 if os.path.exists(csv_file_general):
     os.remove(csv_file_general)
 save_in_csv_and_xlsx.save_in_csv_general(
@@ -201,7 +205,7 @@ save_in_csv_and_xlsx.save_in_csv_general(
 save_in_csv_and_xlsx.csv2xlsx(csv_file_general)
 for i in range(len(images)):
 
-    csv_file_curvature = './vein_data/vein_curvatures_' + str(i) + '.csv'
+    csv_file_curvature = os.path.join(vein_data, 'vein_curvatures_') + str(i) + '.csv'
     if os.path.exists(csv_file_curvature):
         os.remove(csv_file_curvature)
     for j in range(len(curvatures[i])):
@@ -218,30 +222,34 @@ vein_bgr_joined = show_images.show_images(veins_bgr, veins_bgr_shape, column, al
 img_joined = show_images.show_images(imgs, imgs_shape, column, alignment='left')
 
 # plt.shows
+results = 'results'
+if os.path.exists(results):
+    shutil.rmtree(results)
+os.mkdir(results)
 fig_1, axes_1 = plt.subplots(1, 1, figsize=(16, 8))
 axes_1.imshow(edge_canny_joined, cmap='gray')
 axes_1.set_title('Cannied Edges')
-# axes_1.set_axis_off()
+plt.savefig(os.path.join(results, 'Cannied_Edges.jpg'))
 
 fig_2, axes_2 = plt.subplots(1, 1, figsize=(16, 8))
 axes_2.imshow(vein_joined, cmap='gray')
 axes_2.set_title('Veins')
-# axes_2.set_axis_off()
+plt.savefig(os.path.join(results, 'Veins.jpg'))
 
 fig_3, axes_3 = plt.subplots(1, 1, figsize=(16, 8))
 axes_3.imshow(main_vein_joined, cmap='gray')
 axes_3.set_title('Main Veins')
-# axes_3.set_axis_off()
+plt.savefig(os.path.join(results, 'Main_Veins.jpg'))
 
 fig_4, axes_4 = plt.subplots(1, 1, figsize=(16, 8))
 axes_4.imshow(cv2.cvtColor(vein_bgr_joined, cv2.COLOR_BGR2RGB))
 axes_4.set_title('Colored Veins')
-# axes_4.set_axis_off()
+plt.savefig(os.path.join(results, 'Colored_Veins.jpg'))
 
 fig_5, axes_5 = plt.subplots(1, 1, figsize=(16, 8))
 axes_5.imshow(cv2.cvtColor(img_joined, cv2.COLOR_BGR2RGB))
 axes_5.set_title('Leaves with tops and bottoms')
-# axes_5.set_axis_off()
+plt.savefig(os.path.join(results, 'Leaves_with_tops_and_bottoms.jpg'))
 
 frame = plt.gca()
 frame.axes.get_yaxis().set_visible(False)
