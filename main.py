@@ -160,10 +160,10 @@ for i in range(len(edges_canny)):
     main_vein_bgr = cv2.cvtColor(main_vein, cv2.COLOR_GRAY2BGR)
     vein_bgr = cv2.add(main_vein_bgr, other_vein_bgr)
     for j in range(1, len(pts)):
-        cv2.putText(vein_bgr, str(j)+', '+str(angles[j])[:str(angles[j]).find('.')+2],
-                    (min(vein_bgr.shape[0]-100, max(50, text_places[j][1]-30)),
-                     min(vein_bgr.shape[1]-50, max(30, text_places[j][0]))),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.3, (111, 222, 111), thickness=2)
+        cv2.putText(vein_bgr, str(j)+', '+str(round(angles[j], 1)),
+                    (min(vein_bgr.shape[0]-120, max(10, text_places[j][1]-30)),
+                     min(vein_bgr.shape[1]-10, max(50, text_places[j][0]))),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.3, color_choice[j], thickness=2)
     # fig, ax = plt.subplots(1, 1, figsize=(8, 8))
     # ax.imshow(vein_bgr, cmap="gray")
     # plt.title('Colored Veins with Angles')
@@ -229,27 +229,27 @@ os.mkdir(results)
 fig_1, axes_1 = plt.subplots(1, 1, figsize=(16, 8))
 axes_1.imshow(edge_canny_joined, cmap='gray')
 axes_1.set_title('Cannied Edges')
-plt.savefig(os.path.join(results, 'Cannied_Edges.jpg'))
+plt.savefig(os.path.join(results, 'Cannied_Edges.jpg'), bbox_inches='tight')
 
 fig_2, axes_2 = plt.subplots(1, 1, figsize=(16, 8))
 axes_2.imshow(vein_joined, cmap='gray')
 axes_2.set_title('Veins')
-plt.savefig(os.path.join(results, 'Veins.jpg'))
+plt.savefig(os.path.join(results, 'Veins.jpg'), bbox_inches='tight')
 
 fig_3, axes_3 = plt.subplots(1, 1, figsize=(16, 8))
 axes_3.imshow(main_vein_joined, cmap='gray')
 axes_3.set_title('Main Veins')
-plt.savefig(os.path.join(results, 'Main_Veins.jpg'))
+plt.savefig(os.path.join(results, 'Main_Veins.jpg'), bbox_inches='tight')
 
 fig_4, axes_4 = plt.subplots(1, 1, figsize=(16, 8))
 axes_4.imshow(cv2.cvtColor(vein_bgr_joined, cv2.COLOR_BGR2RGB))
 axes_4.set_title('Colored Veins')
-plt.savefig(os.path.join(results, 'Colored_Veins.jpg'))
+plt.savefig(os.path.join(results, 'Colored_Veins.jpg'), bbox_inches='tight')
 
 fig_5, axes_5 = plt.subplots(1, 1, figsize=(16, 8))
 axes_5.imshow(cv2.cvtColor(img_joined, cv2.COLOR_BGR2RGB))
 axes_5.set_title('Leaves with tops and bottoms')
-plt.savefig(os.path.join(results, 'Leaves_with_tops_and_bottoms.jpg'))
+plt.savefig(os.path.join(results, 'Leaves_with_tops_and_bottoms.jpg'), bbox_inches='tight')
 
 frame = plt.gca()
 frame.axes.get_yaxis().set_visible(False)
