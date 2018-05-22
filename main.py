@@ -159,11 +159,32 @@ for i in range(len(edges_canny)):
     # print("text_places:", text_places)
     main_vein_bgr = cv2.cvtColor(main_vein, cv2.COLOR_GRAY2BGR)
     vein_bgr = cv2.add(main_vein_bgr, other_vein_bgr)
+    img_t_avoid_covering = np.zeros_like(vein_bgr)
+    axises_text = []
     for j in range(1, len(pts)):
-        cv2.putText(vein_bgr, str(j)+', '+str(round(angles[j], 1)),
-                    (min(vein_bgr.shape[0]-120, max(10, text_places[j][1]-30)),
-                     min(vein_bgr.shape[1]-10, max(50, text_places[j][0]))),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.3, color_choice[j], thickness=2)
+        cv2.circle(vein_bgr, (text_places[j][1], text_places[j][0]), 3, (161, 161), thickness=3)
+        axis_text = [min(vein_bgr.shape[0]-25, max(0, text_places[j][1]-30)),
+                     min(vein_bgr.shape[1], max(70, text_places[j][0]))]
+        # the size of '8' is (70, 25), so the distance threshold can be 80
+        for ax in axises_text:
+            # Avoid overlapping
+            if np.linalg.norm(np.asarray(ax) - np.asarray(axis_text)) < 70:
+                if -25 < axis_text[0] - ax[0] < 0 and abs(axis_text[1] - ax[1]) < 70:
+                    # Need moving left
+                    axis_text[0] = max(0, axis_text[0] - (25 - abs(ax[0] - axis_text[0])))
+                if 0 < axis_text[0] - ax[0] < 25 and abs(axis_text[1] - ax[1]) < 70:
+                    # Need moving right
+                    axis_text[0] = min(vein_bgr.shape[1]-25, axis_text[0] + (25 - abs(ax[0] - axis_text[0])))
+                if -70 < axis_text[1] - ax[1] < 0 and abs(axis_text[0] - ax[0]) < 25:
+                    # Need moving down
+                    axis_text[1] = max(70, axis_text[1] + (70 - abs(ax[1] - axis_text[1])))
+                if 0 < axis_text[1] - ax[1] < 70 and abs(axis_text[0] - ax[0]) < 25:
+                    # Need moving up
+                    axis_text[1] = min(vein_bgr.shape[0], axis_text[1] - (70 - abs(ax[1] - axis_text[1])))
+        axises_text.append(axis_text)
+        cv2.putText(vein_bgr, str(j),#+', '+str(round(angles[j], 1)),
+                    tuple(axis_text),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.3, color_choice[j-1], thickness=2)
     # fig, ax = plt.subplots(1, 1, figsize=(8, 8))
     # ax.imshow(vein_bgr, cmap="gray")
     # plt.title('Colored Veins with Angles')
