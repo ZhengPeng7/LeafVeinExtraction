@@ -162,7 +162,7 @@ for i in range(len(edges_canny)):
     img_t_avoid_covering = np.zeros_like(vein_bgr)
     axises_text = []
     for j in range(1, len(pts)):
-        cv2.circle(vein_bgr, (text_places[j][1], text_places[j][0]), 3, (161, 161), thickness=3)
+        # cv2.circle(vein_bgr, (text_places[j][1], text_places[j][0]), 3, (161, 161), thickness=3)
         axis_text = [min(vein_bgr.shape[0]-25, max(0, text_places[j][1]-30)),
                      min(vein_bgr.shape[1], max(70, text_places[j][0]))]
         # the size of '8' is (70, 25), so the distance threshold can be 80

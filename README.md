@@ -43,15 +43,15 @@
 
 ### Result:
 
-![cannied_edges](./images/cannied_edges.png)
+![cannied_edges](./images/Cannied_Edges.jpg)
 
-![veins](./images/veins.png)
+![veins](./images/Veins.jpg)
 
-![main_veins](./images/main_veins.png)
+![main_veins](./images/Main_Veins.jpg)
 
-![color_veins_with_angles](./images/color_veins_with_angles.jpg)
+![color_veins_with_angles](./images/Colored_Veins.jpg)
 
-![find_tops_bottoms](./images/find_tops_bottoms.png)
+![find_tops_bottoms](./images/Leaves_with_tops_and_bottoms.jpg)
 
 ## TODO:
 
