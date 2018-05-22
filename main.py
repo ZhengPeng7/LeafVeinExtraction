@@ -99,12 +99,15 @@ for i in range(len(edges_canny)):
     cv2.fillPoly(other_vein, small_perimeters, 0)
     other_vein_bgr = cv2.cvtColor(other_vein, cv2.COLOR_GRAY2BGR)
     _, contours, hierarchy = cv2.findContours(other_vein, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    color_choice = [(0, 0, 255), (0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 0, 255), (255, 255, 0), (255, 144, 30),
-                    (0, 90, 139), (130, 0, 75), (34, 128, 34), (118, 16, 205), (0, 118, 238), (139, 236, 255)]
+    color_choice = [(0, 0, 255), (0, 255, 0), (255, 0, 255), (0, 255, 255), (0, 64, 255)]
     masks = []
     individual_branchs = []
-    for j in range(10):
-        color_choice.append(np.random.randint(0, 255, size=(1, 3))[0].tolist())
+    num_more_color = 10
+    while num_more_color >= 0:
+        color_new = np.random.randint(0, 255, size=(1, 3))[0].tolist()
+        if color_new not in color_choice:
+            color_choice.append(color_new.copy())
+            num_more_color -= 1
     for c in range(len(contours)-1, -1, -1):
         if cv2.arcLength(contours[c], True) < 100:
             contours.pop(c)
