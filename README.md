@@ -55,7 +55,9 @@
 
 ## TODO:
 
-​	Use superpixel to adapt canny theshold locally.
+- Use superpixel to adapt canny theshold locally.
+
+- Upgrade Region Growth with Kalman Filter.
 
 > If you've ever met any confusion or bug in related algorithms or code, please be not mean about your issue:)
 
